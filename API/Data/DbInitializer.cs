@@ -1,17 +1,63 @@
 ﻿using API.Data.Contexts;
 using API.Entities;
+using API.Entities.Constants;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Data
 {
 	public class DbInitializer
 	{
-		public static async Task Initialize(AppDbContext context)
+		public async static Task SeedAsync(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, AppDbContext context)
+		{
+			await SeedRolesAsync(roleManager);
+			await SeedUsersAsync(userManager);
+			Initialize(context);
+		}
+
+		private async static Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+		{
+			foreach (var role in Enum.GetValues<UserRoles>())
+			{
+				if (!await roleManager.RoleExistsAsync(role.ToString()))
+				{
+					await roleManager.CreateAsync(new IdentityRole
+					{
+						Name = role.ToString(),
+					});
+				}
+			}
+		}
+
+		private async static Task SeedUsersAsync(UserManager<User> userManager)
+		{
+			var user = await userManager.FindByNameAsync("Admin");
+			if (user is null)
+			{
+				user = new User
+				{
+					UserName = "Admin",
+					Email = "admin@gmail.com"
+				};
+
+				var result = await userManager.CreateAsync(user, "Admin123!");
+
+				if (!result.Succeeded)
+				{
+					foreach (var error in result.Errors)
+						throw new Exception(error.Description);
+				}
+
+				await userManager.AddToRoleAsync(user, UserRoles.Admin.ToString());
+			}
+		}
+
+		private static void Initialize(AppDbContext context)
 		{
 			if (context.Products.Any()) return;
 
 			var products = new List<Product>
 			{
-				new Product
+						 new Product
 				{
 					Name = "Angular Speedster Board 2000",
 					Description =

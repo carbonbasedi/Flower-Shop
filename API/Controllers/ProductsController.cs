@@ -5,7 +5,9 @@ using API.Entities;
 using API.Extensions;
 using API.RequestHelpers.Common;
 using API.RequestHelpers.EntitiyParams;
+using API.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +17,11 @@ namespace API.Controllers
 	{
 		private readonly AppDbContext _context;
 		private readonly IMapper _mapper;
+		private readonly ImageService _imageService;
 
-		public ProductsController(AppDbContext context, IMapper mapper)
+		public ProductsController(AppDbContext context, IMapper mapper, ImageService imageService)
 		{
+			_imageService = imageService;
 			_context = context;
 			_mapper = mapper;
 		}
@@ -57,12 +61,22 @@ namespace API.Controllers
 			return Ok(new { brands, types });
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<ActionResult<Product>> CreateProduct([FromForm] ProductCreateDTO productDTO)
 		{
 			var product = _mapper.Map<Product>(productDTO);
 
-			//if(productDTO.File != null) { }
+			if (productDTO.File != null)
+			{
+				var imageResult = await _imageService.AddImageAsync(productDTO.File);
+
+				if (imageResult.Error != null)
+					return BadRequest(new ProblemDetails { Title = imageResult.Error.Message });
+
+				product.PictureUrl = imageResult.SecureUrl.ToString();
+				product.PublicId = imageResult.PublicId;
+			}
 
 			_context.Products.Add(product);
 
@@ -73,6 +87,7 @@ namespace API.Controllers
 			return BadRequest(new ProblemDetails { Title = "Problem creating new product" });
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPut]
 		public async Task<ActionResult<Product>> UpdateProduct([FromForm] ProductUpdateDTO productDTO)
 		{
@@ -82,7 +97,19 @@ namespace API.Controllers
 
 			_mapper.Map(productDTO, product);
 
-			//if ( productDTO.File != null ) { }
+			if (productDTO.File != null)
+			{
+				var imageResult = await _imageService.AddImageAsync(productDTO.File);
+
+				if (imageResult.Error != null)
+					return BadRequest(new ProblemDetails { Title = imageResult.Error.Message });
+
+				if (!string.IsNullOrEmpty(product.PublicId))
+					await _imageService.DeleteImageAsync(product.PublicId);
+
+				product.PictureUrl = imageResult.SecureUrl.ToString();
+				product.PublicId = imageResult.PublicId;
+			}
 
 			var result = await _context.SaveChangesAsync() > 0;
 
@@ -91,6 +118,7 @@ namespace API.Controllers
 			return BadRequest(new ProblemDetails { Title = "Problem updating product" });
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<ActionResult> DeleteProduct(int id)
 		{
@@ -98,8 +126,8 @@ namespace API.Controllers
 
 			if (product == null) return NotFound();
 
-			//if(!string.IsNullOrEmpty(product.PublicId))
-			//await _imageService.DeleteImageAsync(product.PublicId);
+			if (!string.IsNullOrEmpty(product.PublicId))
+				await _imageService.DeleteImageAsync(product.PublicId);
 
 			_context.Products.Remove(product);
 
