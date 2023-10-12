@@ -12,7 +12,11 @@ import Register from "../../features/account/Register";
 import RequireAuth from "./RequireAuth";
 import Orders from "../../features/orders/Orders";
 import CheckoutWrapper from "../../features/checkout/CheckoutWrapper";
-import Inventory from "../../features/admin/Inventory";
+import Inventory from "../../features/admin/Inventory/Inventory";
+import Dashboard from "../../features/admin/dashboard/Dashboard";
+import SliderList from "../../features/admin/slider/SliderList";
+import ForgotPassword from "../../features/account/ForgotPassword";
+import ResetPassword from "../../features/account/ResetPassword";
 
 export const router = createBrowserRouter([
   {
@@ -38,8 +42,16 @@ export const router = createBrowserRouter([
         element: <RequireAuth roles={["Admin"]} />,
         children: [
           {
-            path: "inventory",
+            path: "dashboard",
+            element: <Dashboard />,
+          },
+          {
+            path: "dashboard/inventory",
             element: <Inventory />,
+          },
+          {
+            path: "dashboard/sliderList",
+            element: <SliderList />,
           },
         ],
       },
@@ -78,6 +90,14 @@ export const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+      {
+        path: "forgotPassword",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "resetPassword",
+        element: <ResetPassword />,
       },
       {
         path: "*",

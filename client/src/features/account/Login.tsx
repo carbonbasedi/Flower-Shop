@@ -92,9 +92,15 @@ export default function Login() {
           >
             Sign In
           </LoadingButton>
-          <Grid container>
+          <Grid container spacing={3} flexDirection={"column"}>
             <Grid item>
               <Link to="/register">{"Don't have an account? Sign Up"}</Link>
+            </Grid>
+            <Grid item>
+              <Link to="/forgotPassword">{"Forgot password ?"}</Link>
+            </Grid>
+            <Grid item>
+              <Link to="/resetPassword">{"reset"}</Link>
             </Grid>
           </Grid>
         </Box>

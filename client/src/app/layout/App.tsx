@@ -39,9 +39,15 @@ function App() {
   const paletteType = darkMode ? "dark" : "light";
   const theme = createTheme({
     palette: {
+      primary: {
+        main: "#9ccc65",
+      },
+      secondary: {
+        main: "#1b5e20",
+      },
       mode: paletteType,
       background: {
-        default: paletteType === "light" ? "#eaeaea" : "#121212",
+        default: paletteType === "light" ? "#9ccc65" : "#1b5e20",
       },
     },
   });
@@ -52,6 +58,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
       <Box
         sx={{
           display: "flex",
@@ -59,11 +66,6 @@ function App() {
           minHeight: "100vh",
         }}
       >
-        <ToastContainer
-          position="bottom-right"
-          hideProgressBar
-          theme="colored"
-        />
         <CssBaseline />
         <Header darkMode={darkMode} handleThemeChange={handThemeChange} />
         {loading ? (

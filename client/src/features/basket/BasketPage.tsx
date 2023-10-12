@@ -7,7 +7,7 @@ import BasketTable from "./BasketTable";
 export default function BasketPage() {
   const { basket } = useAppSelector((state) => state.basket);
 
-  if (!basket)
+  if (!basket?.items.length)
     return (
       <>
         <Typography variant="h6">Your basket is empty</Typography>

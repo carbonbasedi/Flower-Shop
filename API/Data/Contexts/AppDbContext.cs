@@ -12,6 +12,8 @@ namespace API.Data.Contexts
 		public DbSet<Product> Products { get; set; }
 		public DbSet<Basket> Baskets { get; set; }
 		public DbSet<Order> Orders { get; set; }
+		public DbSet<HomePageSlider> Sliders { get; set; }
+		public DbSet<AboutUs> AboutUs { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);

@@ -8,12 +8,29 @@ namespace API.RequestHelpers.Validators.Product
         public ProductCreateDTOValidator()
         {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .WithMessage("Title is required");
+               .NotEmpty()
+               .MaximumLength(20);
 
-            RuleFor(x => x.Name)
-                .MinimumLength(10)
-                .WithMessage("Title mustbe at least 10 characters");
+            RuleFor(x => x.Description)
+                .NotEmpty()
+                .MaximumLength(150);
+
+            RuleFor(x => x.Price)
+                .NotEmpty()
+                .GreaterThan(0);
+
+            RuleFor(x => x.QuantityInStock)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(0);
+
+            RuleFor(x => x.File)
+                .NotEmpty();
+
+            RuleFor(x => x.Type)
+                .NotEmpty();
+
+            RuleFor(x => x.Brand)
+                .NotEmpty();
         }
     }
 }

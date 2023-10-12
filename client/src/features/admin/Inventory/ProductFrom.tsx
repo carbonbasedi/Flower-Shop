@@ -1,16 +1,16 @@
 import { Typography, Grid, Paper, Box, Button } from "@mui/material";
 import { FieldValues, useForm } from "react-hook-form";
-import AppTextInput from "../../app/components/AppTextInput";
-import { Product } from "../../app/models/product";
+import AppTextInput from "../../../app/components/AppTextInput";
+import { Product } from "../../../app/models/product";
 import { useEffect } from "react";
-import useProducts from "../../app/hooks/useProducts";
-import AppSelecList from "../../app/components/AppSelectList";
-import AppDropzone from "../../app/components/AppDropzone";
+import useProducts from "../../../app/hooks/useProducts";
+import AppSelecList from "../../../app/components/AppSelectList";
+import AppDropzone from "../../../app/components/AppDropzone";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchema } from "./productValidation";
-import agent from "../../app/api/agent";
-import { useAppDispatch } from "../../app/store/configureStore";
-import { setProduct } from "../catalog/catalogSlice";
+import agent from "../../../app/api/agent";
+import { useAppDispatch } from "../../../app/store/configureStore";
+import { setProduct } from "../../catalog/catalogSlice";
 import { LoadingButton } from "@mui/lab";
 
 interface Props {
@@ -99,7 +99,7 @@ export default function ProductForm({ product, cancelEdit }: Props) {
           <Grid item xs={12}>
             <AppTextInput
               control={control}
-              name="desc"
+              name="description"
               label="Description"
               multiline={true}
               rows={4}
@@ -133,6 +133,7 @@ export default function ProductForm({ product, cancelEdit }: Props) {
             Cancel
           </Button>
           <LoadingButton
+            disabled={!isDirty}
             loading={isSubmitting}
             variant="contained"
             color="success"

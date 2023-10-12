@@ -97,6 +97,11 @@ const Admin = {
   updateProduct: (product: any) =>
     requests.putForm("products", createFormData(product)),
   deleteProduct: (id: number) => requests.delete(`products/${id}`),
+  createSlider: (slider: any) =>
+    requests.postForm("slider", createFormData(slider)),
+  updateSlider: (slider: any) =>
+    requests.putForm("slider", createFormData(slider)),
+  deleteSlider: (id: number) => requests.delete(`slider/${id}`),
 };
 
 const Catalog = {
@@ -126,6 +131,11 @@ const Account = {
   register: (values: any) => requests.post("account/register", values),
   currentUser: () => requests.get("account/currentUser"),
   fetchAddress: () => requests.get("account/savedAddress"),
+  forgotPassword: (values: any) =>
+    requests.post("account/forgotPassword", values),
+  logout: () => requests.get("account/logout"),
+  resetPassword: (values: any) =>
+    requests.post("account/resetPassword", values),
 };
 
 const Orders = {
@@ -138,6 +148,11 @@ const Payments = {
   createPaymentIntent: () => requests.post("payments", {}),
 };
 
+const Slider = {
+  list: (params: URLSearchParams) => requests.get("slider", params),
+  details: (id: number) => requests.get(`slider/${id}`),
+};
+
 const agent = {
   Catalog,
   TestErrors,
@@ -146,6 +161,7 @@ const agent = {
   Orders,
   Payments,
   Admin,
+  Slider,
 };
 
 export default agent;

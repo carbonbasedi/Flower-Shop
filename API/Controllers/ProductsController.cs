@@ -5,6 +5,7 @@ using API.Entities;
 using API.Extensions;
 using API.RequestHelpers.Common;
 using API.RequestHelpers.EntitiyParams;
+using API.RequestHelpers.Validators.Product;
 using API.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -65,6 +66,16 @@ namespace API.Controllers
 		[HttpPost]
 		public async Task<ActionResult<Product>> CreateProduct([FromForm] ProductCreateDTO productDTO)
 		{
+			var vResult = await new ProductCreateDTOValidator().ValidateAsync(productDTO);
+			if (!vResult.IsValid)
+			{
+				foreach (var error in vResult.Errors)
+				{
+					ModelState.AddModelError(string.Empty, error.ErrorMessage);
+				}
+				return ValidationProblem();
+			}
+
 			var product = _mapper.Map<Product>(productDTO);
 
 			if (productDTO.File != null)
@@ -91,6 +102,16 @@ namespace API.Controllers
 		[HttpPut]
 		public async Task<ActionResult<Product>> UpdateProduct([FromForm] ProductUpdateDTO productDTO)
 		{
+			var vResult = await new ProductUpdateDTOValidator().ValidateAsync(productDTO);
+			if (!vResult.IsValid)
+			{
+				foreach (var error in vResult.Errors)
+				{
+					ModelState.AddModelError(string.Empty, error.ErrorMessage);
+				}
+				return ValidationProblem();
+			}
+
 			var product = await _context.Products.FindAsync(productDTO.Id);
 
 			if (product == null) return NotFound();

@@ -74,8 +74,8 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
             </ListItem>
           ))}
           {user && user.roles?.includes("Admin") && (
-            <ListItem component={NavLink} to={"/inventory"} sx={navStyles}>
-              INVENTORY
+            <ListItem component={NavLink} to={"/dashboard"} sx={navStyles}>
+              DASHBOARD
             </ListItem>
           )}
         </List>

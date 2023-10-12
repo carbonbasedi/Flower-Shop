@@ -92,7 +92,7 @@ export default function ProductDetails() {
               </TableRow>
               <TableRow>
                 <TableCell>Description</TableCell>
-                <TableCell>{product.desc}</TableCell>
+                <TableCell>{product.description}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Type</TableCell>

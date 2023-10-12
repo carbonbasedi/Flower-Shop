@@ -1,15 +1,16 @@
 using System.Text;
 using API.Data;
 using API.Data.Contexts;
-using API.DTOs.Product.Request;
 using API.Entities;
 using API.Middleware;
 using API.RequestHelpers.MappingProfiles;
-using API.RequestHelpers.Validators.Product;
 using API.Services;
-using FluentValidation;
+using API.Services.EmailService;
+using API.Services.EmailService.Abstract;
+using API.Services.EmailService.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -50,16 +51,18 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddCors();
-builder.Services.AddIdentityCore<User>(opt =>
+builder.Services.AddIdentity<User, IdentityRole>(opt =>
 {
 	opt.User.RequireUniqueEmail = true;
+	opt.SignIn.RequireConfirmedEmail = true;
 })
-	.AddRoles<IdentityRole>()
-	.AddEntityFrameworkStores<AppDbContext>();
+	.AddEntityFrameworkStores<AppDbContext>()
+	.AddDefaultTokenProviders();
 
 builder.Services.AddAutoMapper(x =>
 {
 	x.AddProfile(new ProductMappingProfile());
+	x.AddProfile(new SliderMappingProfile());
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -78,7 +81,12 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PaymentService>();
-builder.Services.AddScoped<IValidator<ProductCreateDTO>, ProductCreateDTOValidator>();
+
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+var configuration = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+builder.Services.AddSingleton(configuration);
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

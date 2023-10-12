@@ -11,15 +11,15 @@ import {
   Box,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import { currencyFormat } from "../../app/util/util";
-import useProducts from "../../app/hooks/useProducts";
-import AppPagination from "../../app/components/AppPagination";
-import { useAppDispatch } from "../../app/store/configureStore";
-import { removeProduct, setPageNumber } from "../catalog/catalogSlice";
+import { currencyFormat } from "../../../app/util/util";
+import useProducts from "../../../app/hooks/useProducts";
+import AppPagination from "../../../app/components/AppPagination";
+import { useAppDispatch } from "../../../app/store/configureStore";
+import { removeProduct, setPageNumber } from "../../catalog/catalogSlice";
 import { useState } from "react";
 import ProductForm from "./ProductFrom";
-import { Product } from "../../app/models/product";
-import agent from "../../app/api/agent";
+import { Product } from "../../../app/models/product";
+import agent from "../../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
 
 export default function Inventory() {

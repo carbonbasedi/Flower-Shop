@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using API.Controllers.Base;
 using API.Data.Contexts;
 using API.DTOs.Auth.Request;
@@ -5,23 +6,48 @@ using API.DTOs.Auth.Response;
 using API.Entities;
 using API.Extensions;
 using API.Services;
+using API.Services.EmailService;
+using API.Services.EmailService.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace API.Controllers
 {
     public class AccountController : BaseApiController
     {
         private readonly AppDbContext _context;
+        private readonly IEmailSender _emailSender;
+        private readonly IActionContextAccessor _contextAccessor;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TokenService _tokenService;
         private readonly UserManager<User> _userManager;
-        public AccountController(UserManager<User> userManager, TokenService tokenService, AppDbContext context)
+        private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public AccountController(UserManager<User> userManager,
+                                 SignInManager<User> signInManager,
+                                 RoleManager<IdentityRole> roleManager,
+                                 TokenService tokenService,
+                                 AppDbContext context,
+                                 IEmailSender emailSender,
+                                 IActionContextAccessor contextAccessor,
+                                 IUrlHelperFactory urlHelperFactory,
+                                 IHttpContextAccessor httpContextAccessor)
         {
+            _roleManager = roleManager;
+            _signInManager = signInManager;
             _userManager = userManager;
             _tokenService = tokenService;
             _context = context;
+            _emailSender = emailSender;
+            _contextAccessor = contextAccessor;
+            _urlHelperFactory = urlHelperFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost("login")]
@@ -29,6 +55,15 @@ namespace API.Controllers
         {
             var user = await _userManager.FindByNameAsync(loginDTO.Username);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDTO.Password))
+            {
+                return Unauthorized();
+            }
+            if (!user.EmailConfirmed)
+            {
+                return BadRequest(new ProblemDetails { Title = "Email not confirmed" });
+            }
+            var result = await _signInManager.PasswordSignInAsync(user, loginDTO.Password, false, false);
+            if (!result.Succeeded)
             {
                 return Unauthorized();
             }
@@ -51,6 +86,13 @@ namespace API.Controllers
             };
         }
 
+        [HttpGet("logout")]
+        public async Task<ActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok();
+        }
+
         [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterDTO registerDTO)
         {
@@ -62,9 +104,16 @@ namespace API.Controllers
                 {
                     ModelState.AddModelError(error.Code, error.Description);
                 }
-
                 return ValidationProblem();
             }
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_contextAccessor.ActionContext);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = urlHelper.Action(nameof(ConfirmEmail), "account", new { token, email = user.Email }, _httpContextAccessor.HttpContext.Request.Scheme);
+
+            var message = new Message(new string[] { user.Email }, "P331 Email Confirmation", confirmationLink);
+            _emailSender.SendEmail(message);
+
 
             await _userManager.AddToRoleAsync(user, "User");
             return StatusCode(201);
@@ -94,6 +143,75 @@ namespace API.Controllers
                 .Where(x => x.UserName == User.Identity.Name)
                 .Select(user => user.Address)
                 .FirstOrDefaultAsync();
+        }
+
+        [HttpGet("confirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return NotFound("No such user found");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded) return BadRequest("Something went wrong");
+
+            var redirectLink = "http://localhost:3000/login";
+
+            return Redirect(redirectLink);
+        }
+
+        [HttpPost("forgotPassword")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO forgotPasswordDTO)
+        {
+            var user = await _userManager.FindByEmailAsync(forgotPasswordDTO.Email);
+            if (user is null) return NotFound("No such user found");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_contextAccessor.ActionContext);
+            var resetLink = urlHelper.Action(nameof(ResetPassword), "account", new { token, email = user.Email }, _httpContextAccessor.HttpContext.Request.Scheme);
+
+            var message = new Message(new string[] { user.Email }, "Reset password", resetLink);
+            _emailSender.SendEmail(message);
+
+            return Ok("Password reset link sent");
+        }
+
+        [HttpGet("resetPassword")]
+        public ActionResult<ResetPasswordDTO> ResetPassword(string token, string email)
+        {
+            var dto = new ResetPasswordDTO
+            {
+                Email = email,
+                Token = token
+            };
+            var redirectLink = $"http://localhost:3000/resetPassword?token={token}&email={email}";
+
+            return Ok(new {redirectLink});
+        }
+
+        [HttpPost("resetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDTO resetPasswordDTO)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordDTO.Email);
+            if (user is null) return NotFound("User not found");
+
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordDTO.Token, resetPasswordDTO.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
+                return ValidationProblem();
+            }
+
+            var redirectLink = "http://localhost:3000/resetPassword";
+
+            return Redirect(redirectLink);
+        }
+        private static bool isPassword(string password)
+        {
+            return Regex.IsMatch(password, @"^(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$");
         }
 
         private async Task<Basket> RetrieveBasket(string userId)
