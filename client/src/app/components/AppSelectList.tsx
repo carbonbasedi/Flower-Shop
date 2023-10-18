@@ -1,19 +1,19 @@
 import {
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { UseControllerProps, useController } from "react-hook-form";
 
 interface Props extends UseControllerProps {
   label: string;
-  items: string[];
+  items: any[] | null;
 }
-
 export default function AppSelecList(props: Props) {
   const { fieldState, field } = useController({ ...props, defaultValue: "" });
+  const itemsToRender = props.items || [];
   return (
     <FormControl fullWidth error={!!fieldState.error}>
       <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
@@ -24,9 +24,9 @@ export default function AppSelecList(props: Props) {
         label={props.label}
         onChange={field.onChange}
       >
-        {props.items.map((item, index) => (
-          <MenuItem key={index} value={item}>
-            {item}
+        {itemsToRender.map((item) => (
+          <MenuItem key={item.id} value={item.id}>
+            {item.title}
           </MenuItem>
         ))}
       </Select>

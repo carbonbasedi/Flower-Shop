@@ -131,6 +131,7 @@ namespace API.Controllers
 				product.PictureUrl = imageResult.SecureUrl.ToString();
 				product.PublicId = imageResult.PublicId;
 			}
+			product.ModifiedAt = DateTime.Now;
 
 			var result = await _context.SaveChangesAsync() > 0;
 

@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using API.Controllers.Base;
 using API.Data.Contexts;
 using API.DTOs.Slider.Request;
@@ -108,6 +107,7 @@ namespace API.Controllers
                 slider.PictureUrl = imageResult.SecureUrl.ToString();
                 slider.PublicId = imageResult.PublicId;
             }
+            slider.ModifiedAt = DateTime.Now;
 
             var result = await _context.SaveChangesAsync() > 0;
 

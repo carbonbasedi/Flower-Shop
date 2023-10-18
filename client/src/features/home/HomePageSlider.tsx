@@ -22,6 +22,7 @@ export default function HomePageSlider() {
     <Slider {...settings}>
       {sliders.map((slider) => (
         <Paper
+          key={slider.id}
           sx={{
             position: "relative",
             backgroundColor: "grey.800",

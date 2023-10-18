@@ -68,7 +68,6 @@ export default function Login() {
             margin="normal"
             fullWidth
             label="Username"
-            autoFocus
             {...register("username", { required: "Username is required" })}
             error={!!errors.username}
             helperText={errors?.username?.message as string}

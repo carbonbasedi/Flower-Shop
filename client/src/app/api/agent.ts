@@ -102,6 +102,19 @@ const Admin = {
   updateSlider: (slider: any) =>
     requests.putForm("slider", createFormData(slider)),
   deleteSlider: (id: number) => requests.delete(`slider/${id}`),
+  createAboutUs: (aboutUs: any) =>
+    requests.postForm("aboutUs", createFormData(aboutUs)),
+  updateAboutUs: (aboutUs: any) =>
+    requests.putForm("aboutUs", createFormData(aboutUs)),
+  deleteAboutUs: (id: number) => requests.delete(`aboutUs/${id}`),
+  createDuty: (duty: any) => requests.postForm("duty", createFormData(duty)),
+  updateDuty: (duty: any) => requests.putForm("duty", createFormData(duty)),
+  deleteDuty: (id: number) => requests.delete(`duty/${id}`),
+  createWorker: (worker: any) =>
+    requests.postForm("worker", createFormData(worker)),
+  updateWorker: (worker: any) =>
+    requests.putForm("worker", createFormData(worker)),
+  deleteWorker: (id: number) => requests.delete(`worker/${id}`),
 };
 
 const Catalog = {
@@ -134,6 +147,7 @@ const Account = {
   forgotPassword: (values: any) =>
     requests.post("account/forgotPassword", values),
   logout: () => requests.get("account/logout"),
+  resetPasswordGet:() => requests.get('account/resetPasswordGet'),
   resetPassword: (values: any) =>
     requests.post("account/resetPassword", values),
 };
@@ -153,6 +167,22 @@ const Slider = {
   details: (id: number) => requests.get(`slider/${id}`),
 };
 
+const AboutUs = {
+  list: () => requests.get("aboutUs"),
+  details: (id: number) => requests.get(`aboutUs/${id}`),
+};
+
+const Duty = {
+  list: () => requests.get("duty"),
+  details: (id: number) => requests.get(`duty/${id}`),
+};
+
+const Worker = {
+  list: (params: URLSearchParams) => requests.get("worker", params),
+  details: (id: number) => requests.get(`worker/${id}`),
+  fetchFilters: () => requests.get("worker/filters"),
+};
+
 const agent = {
   Catalog,
   TestErrors,
@@ -162,6 +192,9 @@ const agent = {
   Payments,
   Admin,
   Slider,
+  AboutUs,
+  Duty,
+  Worker,
 };
 
 export default agent;

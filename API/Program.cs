@@ -63,9 +63,17 @@ builder.Services.AddAutoMapper(x =>
 {
 	x.AddProfile(new ProductMappingProfile());
 	x.AddProfile(new SliderMappingProfile());
+	x.AddProfile(new AboutUsMappingProfile());
+	x.AddProfile(new DutyMappingProfile());
+	x.AddProfile(new WorkerMappingProfile());
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(opt =>
+{
+	opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+	opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
 	.AddJwtBearer(opt =>
 	{
 		opt.TokenValidationParameters = new TokenValidationParameters
@@ -77,6 +85,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
 		};
 	});
+
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<TokenService>();

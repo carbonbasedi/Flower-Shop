@@ -5,10 +5,9 @@ import { basketSlice } from "../../features/basket/basketSlice";
 import { catalogSlice } from "../../features/catalog/catalogSlice";
 import { accountSlice } from "../../features/account/accountSlice";
 import { sliderSlice } from "../../features/admin/slider/sliderSlice";
-
-// export function configureStore() {
-//   return createStore(counterReducer);
-// }
+import { aboutUsSlice } from "../../features/admin/aboutUs/aboutUsSlice";
+import { dutySlice } from "../../features/admin/duty/dutySlice";
+import { workerSlice } from "../../features/admin/worker/workerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +16,9 @@ export const store = configureStore({
     catalog: catalogSlice.reducer,
     account: accountSlice.reducer,
     slider: sliderSlice.reducer,
+    aboutUs: aboutUsSlice.reducer,
+    duty: dutySlice.reducer,
+    worker: workerSlice.reducer,
   },
 });
 

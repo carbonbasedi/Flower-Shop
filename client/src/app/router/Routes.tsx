@@ -17,6 +17,9 @@ import Dashboard from "../../features/admin/dashboard/Dashboard";
 import SliderList from "../../features/admin/slider/SliderList";
 import ForgotPassword from "../../features/account/ForgotPassword";
 import ResetPassword from "../../features/account/ResetPassword";
+import AboutUsList from "../../features/admin/aboutUs/AboutUsList";
+import DutyList from "../../features/admin/duty/DutyList";
+import WorkerList from "../../features/admin/worker/WorkerList";
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +55,18 @@ export const router = createBrowserRouter([
           {
             path: "dashboard/sliderList",
             element: <SliderList />,
+          },
+          {
+            path: "dashboard/aboutUsList",
+            element: <AboutUsList />,
+          },
+          {
+            path: "dashboard/dutyList",
+            element: <DutyList />,
+          },
+          {
+            path: "dashboard/workerList",
+            element: <WorkerList />,
           },
         ],
       },

@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace API.Controllers
 {
@@ -62,6 +61,7 @@ namespace API.Controllers
             {
                 return BadRequest(new ProblemDetails { Title = "Email not confirmed" });
             }
+
             var result = await _signInManager.PasswordSignInAsync(user, loginDTO.Password, false, false);
             if (!result.Succeeded)
             {
@@ -154,9 +154,7 @@ namespace API.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (!result.Succeeded) return BadRequest("Something went wrong");
 
-            var redirectLink = "http://localhost:3000/login";
-
-            return Redirect(redirectLink);
+            return Ok();
         }
 
         [HttpPost("forgotPassword")]
@@ -176,17 +174,16 @@ namespace API.Controllers
             return Ok("Password reset link sent");
         }
 
-        [HttpGet("resetPassword")]
-        public ActionResult<ResetPasswordDTO> ResetPassword(string token, string email)
+        [HttpGet("resetPasswordGet")]
+        public ActionResult<ResetPasswordDTO> ResetPasswordGet(string token, string email)
         {
             var dto = new ResetPasswordDTO
             {
                 Email = email,
                 Token = token
             };
-            var redirectLink = $"http://localhost:3000/resetPassword?token={token}&email={email}";
 
-            return Ok(new {redirectLink});
+            return Ok(dto);
         }
 
         [HttpPost("resetPassword")]
@@ -205,13 +202,7 @@ namespace API.Controllers
                 return ValidationProblem();
             }
 
-            var redirectLink = "http://localhost:3000/resetPassword";
-
-            return Redirect(redirectLink);
-        }
-        private static bool isPassword(string password)
-        {
-            return Regex.IsMatch(password, @"^(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$");
+            return Ok();
         }
 
         private async Task<Basket> RetrieveBasket(string userId)
@@ -226,6 +217,11 @@ namespace API.Controllers
                 .Include(i => i.Items)
                 .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(x => x.UserId == userId);
+        }
+
+        private static bool isPassword(string password)
+        {
+            return Regex.IsMatch(password, @"^(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$");
         }
     }
 }
