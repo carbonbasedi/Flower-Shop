@@ -1,19 +1,26 @@
+export interface Category {
+  id: number;
+  title: string;
+  products: Product[];
+}
+
 export interface Product {
   id: number;
   name: string;
   description: string;
   price: number;
-  pictureUrl: string;
-  type?: string;
-  brand: string;
-  quantityInStock?: number;
+  quantityInStock: number;
+  pictureUrl?: string;
+  categoryId: number;
+  category: string;
+  isFeatured: boolean;
+  discount: number;
 }
 
 export interface ProductParams {
   orderBy: string;
   searchTerm?: string;
-  types: string[];
-  brands: string[];
+  categories: string[];
   pageNumber: number;
   pageSize: number;
 }

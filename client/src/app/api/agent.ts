@@ -115,6 +115,18 @@ const Admin = {
   updateWorker: (worker: any) =>
     requests.putForm("worker", createFormData(worker)),
   deleteWorker: (id: number) => requests.delete(`worker/${id}`),
+  createCategory: (category: any) =>
+    requests.postForm("category", createFormData(category)),
+  updateCategory: (category: any) =>
+    requests.putForm("category", createFormData(category)),
+  deleteCategory: (id: number) => requests.delete(`category/${id}`),
+  paidOrders: () => requests.get("orders/adminOrdersList"),
+  orderDelivered: (id: number) => requests.delete(`orders/${id}`),
+  createContactInfo: (contactInfo: any) =>
+    requests.postForm("contactInfo", createFormData(contactInfo)),
+  updateContactInfo: (contactInfo: any) =>
+    requests.putForm("contactInfo", createFormData(contactInfo)),
+  deleteContactInfo: (id: number) => requests.delete(`contactInfo/${id}`),
 };
 
 const Catalog = {
@@ -147,7 +159,7 @@ const Account = {
   forgotPassword: (values: any) =>
     requests.post("account/forgotPassword", values),
   logout: () => requests.get("account/logout"),
-  resetPasswordGet:() => requests.get('account/resetPasswordGet'),
+  resetPasswordGet: () => requests.get("account/resetPasswordGet"),
   resetPassword: (values: any) =>
     requests.post("account/resetPassword", values),
 };
@@ -183,6 +195,16 @@ const Worker = {
   fetchFilters: () => requests.get("worker/filters"),
 };
 
+const Category = {
+  list: () => requests.get("category"),
+  details: (id: number) => requests.get(`category/${id}`),
+};
+
+const ContactInfo = {
+  list: () => requests.get("contactInfo"),
+  details: (id: number) => requests.get(`contactInfo/${id}`),
+};
+
 const agent = {
   Catalog,
   TestErrors,
@@ -195,6 +217,8 @@ const agent = {
   AboutUs,
   Duty,
   Worker,
+  Category,
+  ContactInfo,
 };
 
 export default agent;

@@ -16,6 +16,8 @@ namespace API.Data.Contexts
 		public DbSet<AboutUs> AboutUs { get; set; }
 		public DbSet<Duty> Duties { get; set; }
 		public DbSet<Worker> Workers { get; set; }
+		public DbSet<Category> Categories { get; set; }
+		public DbSet<ContactInfo> ContactInfo { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
@@ -46,7 +48,6 @@ namespace API.Data.Contexts
 			modelBuilder.Entity<Order>()
 				.Property(p => p.DeliveryFee)
 				.HasColumnType("decimal(18,2)");
-
 			base.OnModelCreating(modelBuilder);
 
 		}

@@ -13,10 +13,11 @@ const sortOptions = [
   { value: "name", label: "Alphabetical" },
   { value: "priceDesc", label: "Price - High to low" },
   { value: "price", label: "Price - Low to high" },
+  { value: "discounted", label: "On Discount" },
 ];
 
 export default function Catalog() {
-  const { prods, brands, types, filtersLoaded, metaData } = useProducts();
+  const { prods, categories, filtersLoaded, metaData } = useProducts();
   const dispatch = useAppDispatch();
   const { productParams } = useAppSelector((state) => state.catalog);
 
@@ -39,20 +40,10 @@ export default function Catalog() {
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
           <CheckboxButtons
-            items={brands}
-            checked={productParams.brands}
-            onChange={(items: string[]) =>
-              dispatch(setProductParams({ brands: items }))
-            }
-          />
-        </Paper>
-
-        <Paper sx={{ mb: 2, p: 2 }}>
-          <CheckboxButtons
-            items={types}
-            checked={productParams.types}
-            onChange={(items: string[]) =>
-              dispatch(setProductParams({ types: items }))
+            items={categories}
+            checked={productParams.categories}
+            onChange={(items: any[]) =>
+              dispatch(setProductParams({ categories: items }))
             }
           />
         </Paper>
@@ -61,7 +52,7 @@ export default function Catalog() {
         <ProductList prods={prods} />
       </Grid>
       <Grid item xs={3} />
-      <Grid item xs={9} sx={{ mb: 2 }}>
+      <Grid item xs={9} sx={{ mb: 2, mt:2 }}>
         {metaData && (
           <AppPagination
             metaData={metaData}

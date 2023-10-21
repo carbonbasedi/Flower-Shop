@@ -12,6 +12,7 @@ import agent from "../../../app/api/agent";
 import { useAppDispatch } from "../../../app/store/configureStore";
 import { setProduct } from "../../catalog/catalogSlice";
 import { LoadingButton } from "@mui/lab";
+import AppCheckbox from "../../../app/components/AppCheckbox";
 
 interface Props {
   product?: Product;
@@ -28,7 +29,7 @@ export default function ProductForm({ product, cancelEdit }: Props) {
   } = useForm({
     resolver: yupResolver<any>(validationSchema),
   });
-  const { brands, types } = useProducts();
+  const { categories } = useProducts();
   const watchFile = watch("file", null);
   const dispatch = useAppDispatch();
 
@@ -64,20 +65,12 @@ export default function ProductForm({ product, cancelEdit }: Props) {
           <Grid item xs={12} sm={12}>
             <AppTextInput control={control} name="name" label="Product name" />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <AppSelecList
               control={control}
-              name="brand"
-              label="Brand"
-              items={brands}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <AppSelecList
-              control={control}
-              name="type"
-              label="Type"
-              items={types}
+              name="categoryId"
+              label="Category"
+              items={categories}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -103,6 +96,22 @@ export default function ProductForm({ product, cancelEdit }: Props) {
               label="Description"
               multiline={true}
               rows={4}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <AppCheckbox
+              control={control}
+              label={"Is Featured"}
+              disabled={false}
+              name={"isFeatured"}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <AppTextInput
+              control={control}
+              label={"Discount"}
+              name={"discount"}
+              type="number"
             />
           </Grid>
           <Grid item xs={12}>

@@ -56,7 +56,7 @@ export default function Inventory() {
 
   return (
     <>
-      <Box display="flex" justifyContent="space-between">
+      <Box display="flex" justifyContent="space-between" >
         <Typography sx={{ p: 2 }} variant="h4">
           Inventory
         </Typography>
@@ -75,9 +75,8 @@ export default function Inventory() {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell align="left">Product</TableCell>
-              <TableCell align="right">Price</TableCell>
-              <TableCell align="center">Type</TableCell>
-              <TableCell align="center">Brand</TableCell>
+              <TableCell align="center">Price</TableCell>
+              <TableCell align="center">Category</TableCell>
               <TableCell align="center">Quantity</TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
@@ -101,11 +100,10 @@ export default function Inventory() {
                     <span>{product.name}</span>
                   </Box>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   {currencyFormat(product.price)}
                 </TableCell>
-                <TableCell align="center">{product.type}</TableCell>
-                <TableCell align="center">{product.brand}</TableCell>
+                <TableCell align="center">{product.category}</TableCell>
                 <TableCell align="center">{product.quantityInStock}</TableCell>
                 <TableCell align="right">
                   <Button

@@ -1,4 +1,5 @@
 ﻿using API.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions
 {
@@ -10,6 +11,8 @@ namespace API.Extensions
 
 			query = orderBy switch
 			{
+				"discounted" => query.Where(p => p.Discount > 0),
+				"featured" => query.Where(p => p.isFeatured),
 				"price" => query.OrderBy(p => p.Price),
 				"priceDesc" => query.OrderByDescending(p => p.Price),
 				_ => query.OrderBy(p => p.Name)
@@ -27,23 +30,14 @@ namespace API.Extensions
 			return query.Where(p => p.Name.ToLower().Contains(lowerCareSearchTerm));
 		}
 
-		public static IQueryable<Product> Filter(this IQueryable<Product> query, string brands, string types)
+		public static IQueryable<Product> Filter(this IQueryable<Product> query, string categories)
 		{
-			var brandList = new List<string>();
-			var typesList = new List<string>();
 			var categoryList = new List<string>();
 
-			if (!string.IsNullOrEmpty(brands))
-				brandList.AddRange(brands.ToLower().Split(',').ToList());
+			if (!string.IsNullOrEmpty(categories))
+				categoryList.AddRange(categories.ToLower().Split(',').ToList());
 
-			if (!string.IsNullOrEmpty(types))
-				typesList.AddRange(types.ToLower().Split(',').ToList());
-
-			if (!string.IsNullOrEmpty(types))
-				categoryList.AddRange(types.ToLower().Split(',').ToList());
-
-			query = query.Where(p => brandList.Count == 0 || brandList.Contains(p.Brand.ToLower()));
-			query = query.Where(p => typesList.Count == 0 || typesList.Contains(p.Type.ToLower()));
+			query = query.Where(p => categoryList.Count == 0 || categoryList.Contains(p.Category.Title.ToLower()));
 
 			return query;
 		}

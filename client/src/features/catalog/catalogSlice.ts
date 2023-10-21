@@ -3,7 +3,7 @@ import {
   createEntityAdapter,
   createSlice,
 } from "@reduxjs/toolkit";
-import { Product, ProductParams } from "../../app/models/product";
+import { Category, Product, ProductParams } from "../../app/models/product";
 import agent from "../../app/api/agent";
 import { RootState } from "../../app/store/configureStore";
 import { MetaData } from "../../app/models/pagination";
@@ -12,8 +12,7 @@ interface CatalogState {
   productsLoaded: boolean;
   filtersLoaded: boolean;
   status: string;
-  brands: string[];
-  types: string[];
+  categories: Category[] | null;
   productParams: ProductParams;
   metaData: MetaData | null;
 }
@@ -27,10 +26,8 @@ function getAxiosParams(productParams: ProductParams) {
   params.append("orderBy", productParams.orderBy);
   if (productParams.searchTerm)
     params.append("searchTerm", productParams.searchTerm);
-  if (productParams.brands.length > 0)
-    params.append("brands", productParams.brands.toString());
-  if (productParams.types.length > 0)
-    params.append("types", productParams.types.toString());
+  if (productParams.categories.length > 0)
+    params.append("categories", productParams.categories.toString());
   return params;
 }
 
@@ -60,24 +57,25 @@ export const fetchProductAsync = createAsyncThunk<Product, number>(
   }
 );
 
-export const fetchFiltersAsync = createAsyncThunk(
-  "catalog/fetchFilters",
-  async (_, thunkAPI) => {
-    try {
-      return agent.Catalog.fetchFilters();
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue({ error: error.data });
-    }
+export const fetchFiltersAsync = createAsyncThunk<
+  Category[],
+  void,
+  { state: RootState }
+>("catalog/fetchFilters", async (_, thunkAPI) => {
+  try {
+    const response = await agent.Catalog.fetchFilters();
+    return response.categories;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue({ error: error.data });
   }
-);
+});
 
 function initParams() {
   return {
     pageNumber: 1,
     pageSize: 6,
     orderBy: "name",
-    brands: [],
-    types: [],
+    categories: [],
   };
 }
 
@@ -87,8 +85,7 @@ export const catalogSlice = createSlice({
     productsLoaded: false,
     filtersLoaded: false,
     status: "idle",
-    brands: [],
-    types: [],
+    categories: null,
     productParams: initParams(),
     metaData: null,
   }),
@@ -150,8 +147,7 @@ export const catalogSlice = createSlice({
       state.status = "idle";
     });
     builder.addCase(fetchFiltersAsync.fulfilled, (state, action) => {
-      state.brands = action.payload.brands;
-      state.types = action.payload.types;
+      state.categories = action.payload;
       state.filtersLoaded = true;
       state.status = "idle";
     });

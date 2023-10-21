@@ -26,10 +26,7 @@ namespace API.RequestHelpers.Validators.Product
             RuleFor(x => x.File)
                 .NotEmpty();
 
-            RuleFor(x => x.Type)
-                .NotEmpty();
-
-            RuleFor(x => x.Brand)
+            RuleFor(x => x.CategoryId)
                 .NotEmpty();
         }
     }

@@ -166,7 +166,7 @@ namespace API.Controllers
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_contextAccessor.ActionContext);
-            var resetLink = urlHelper.Action(nameof(ResetPassword), "account", new { token, email = user.Email }, _httpContextAccessor.HttpContext.Request.Scheme);
+            var resetLink = urlHelper.Action(nameof(ResetPasswordGet), "account", new { token, email = user.Email }, _httpContextAccessor.HttpContext.Request.Scheme);
 
             var message = new Message(new string[] { user.Email }, "Reset password", resetLink);
             _emailSender.SendEmail(message);
@@ -190,7 +190,7 @@ namespace API.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordDTO resetPasswordDTO)
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordDTO.Email);
-            if (user is null) return NotFound("User not found");
+            if (user is null) return Ok();
 
             var result = await _userManager.ResetPasswordAsync(user, resetPasswordDTO.Token, resetPasswordDTO.Password);
             if (!result.Succeeded)

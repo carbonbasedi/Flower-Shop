@@ -9,13 +9,8 @@ import { useAppSelector, useAppDispatch } from "../store/configureStore";
 export default function useProducts() {
   const prods = useAppSelector(productSelectors.selectAll);
   const dispatch = useAppDispatch();
-  const {
-    productsLoaded,
-    filtersLoaded,
-    brands,
-    types,
-    metaData,
-  } = useAppSelector((state) => state.catalog);
+  const { productsLoaded, filtersLoaded, categories, metaData } =
+    useAppSelector((state) => state.catalog);
 
   useEffect(() => {
     if (!productsLoaded) dispatch(fetchProductsAsync());
@@ -29,8 +24,7 @@ export default function useProducts() {
     prods,
     productsLoaded,
     filtersLoaded,
-    brands,
-    types,
+    categories,
     metaData,
   };
 }

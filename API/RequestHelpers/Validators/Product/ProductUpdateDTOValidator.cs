@@ -23,10 +23,7 @@ namespace API.RequestHelpers.Validators.Product
                 .NotEmpty()
                 .GreaterThanOrEqualTo(0);
 
-            RuleFor(x => x.Type)
-                .NotEmpty();
-
-            RuleFor(x => x.Brand)
+            RuleFor(x => x.CategoryId)
                 .NotEmpty();
         }
     }

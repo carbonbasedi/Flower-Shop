@@ -1,5 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -21,6 +22,8 @@ export default function ProductCard({ product }: Props) {
   const { status } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
 
+  const deco = product.discount > 0 ? "line-through" : "";
+
   return (
     <>
       <Card>
@@ -34,9 +37,27 @@ export default function ProductCard({ product }: Props) {
           title={product.name}
         />
         <CardContent>
-          <Typography gutterBottom color="secondary" variant="h5">
-            {currencyFormat(product.price)}
-          </Typography>
+          <Box
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"space-between"}
+          >
+            <Typography
+              gutterBottom
+              color="secondary"
+              variant="h6"
+              sx={{ textDecoration: deco }}
+            >
+              {currencyFormat(product.price)}
+            </Typography>
+            <Typography gutterBottom color="khaki" variant="h5">
+              {product.discount > 0
+                ? currencyFormat(
+                    product.price - (product.price / 100) * product.discount
+                  )
+                : ""}
+            </Typography>
+          </Box>
           <Typography variant="body1" sx={{ color: "Green" }}>
             {product.name}
           </Typography>

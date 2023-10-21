@@ -95,12 +95,8 @@ export default function ProductDetails() {
                 <TableCell>{product.description}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>Type</TableCell>
-                <TableCell>{product.type}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Brand</TableCell>
-                <TableCell>{product.brand}</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>{product.category}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Quantity</TableCell>

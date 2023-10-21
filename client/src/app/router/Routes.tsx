@@ -20,6 +20,8 @@ import ResetPassword from "../../features/account/ResetPassword";
 import AboutUsList from "../../features/admin/aboutUs/AboutUsList";
 import DutyList from "../../features/admin/duty/DutyList";
 import WorkerList from "../../features/admin/worker/WorkerList";
+import CategoryList from "../../features/admin/category/CategoryList";
+import ContactInfoList from "../../features/admin/contactInfo/ContactInfoList";
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +69,14 @@ export const router = createBrowserRouter([
           {
             path: "dashboard/workerList",
             element: <WorkerList />,
+          },
+          {
+            path: "dashboard/categoryList",
+            element: <CategoryList />,
+          },
+          {
+            path: "dashboard/contactInfo",
+            element: <ContactInfoList />,
           },
         ],
       },

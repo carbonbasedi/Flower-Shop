@@ -16,6 +16,7 @@ namespace API.Entities
         public decimal DeliveryFee { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
         public string PaymentIntentId { get; set; }
+        public bool isDelivered { get; set; }
 
         public decimal GetTotal()
         {

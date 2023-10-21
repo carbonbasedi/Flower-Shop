@@ -35,7 +35,7 @@ export default function WorkerSlider() {
         </Typography>
         <Slider {...settings}>
           {workers.map((worker) => (
-            <WorkerCard worker={worker} />
+            <WorkerCard worker={worker} key={worker.id} />
           ))}
         </Slider>
       </>

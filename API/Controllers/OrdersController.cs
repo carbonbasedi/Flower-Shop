@@ -22,6 +22,31 @@ namespace API.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet("AdminOrdersList", Name = "GetAdminOrdersList")]
+        public async Task<ActionResult<List<OrderDTO>>> GetAdminOrdersList()
+        {
+            return await _context.Orders
+                        .Where(x => x.OrderStatus == OrderStatus.Pending && !x.isDelivered)
+                        .ProjectOrderToOrderDTO()
+                        .ToListAsync();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> SetOrderDelivered(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order is null) return NotFound();
+
+            order.isDelivered = true;
+
+            var result = await _context.SaveChangesAsync() > 0;
+            if (result) return Ok();
+
+            return BadRequest(new ProblemDetails { Title = "Problem occured" });
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<OrderDTO>>> GetOrders()
         {

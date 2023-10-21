@@ -66,6 +66,8 @@ builder.Services.AddAutoMapper(x =>
 	x.AddProfile(new AboutUsMappingProfile());
 	x.AddProfile(new DutyMappingProfile());
 	x.AddProfile(new WorkerMappingProfile());
+	x.AddProfile(new CategoryMappingProfile());
+	x.AddProfile(new ContactInfoMappingProfile());
 });
 
 builder.Services.AddAuthentication(opt =>

@@ -62,7 +62,13 @@ export default function SliderForm({ slider, cancelEdit }: Props) {
             <AppTextInput control={control} name="title" label="Title" />
           </Grid>
           <Grid item xs={12} sm={12}>
-            <AppTextInput control={control} name="subtitle" label="Subtitle" />
+            <AppTextInput
+              control={control}
+              name="subtitle"
+              label="Subtitle"
+              multiline={true}
+              rows={4}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <AppTextInput

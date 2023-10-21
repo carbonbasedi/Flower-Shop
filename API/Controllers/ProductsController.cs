@@ -1,6 +1,7 @@
 ﻿using API.Controllers.Base;
 using API.Data.Contexts;
 using API.DTOs.Product.Request;
+using API.DTOs.Product.Response;
 using API.Entities;
 using API.Extensions;
 using API.RequestHelpers.Common;
@@ -28,38 +29,33 @@ namespace API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<List<Product>>> GetProductsAsync([FromQuery] ProductParams productParams)
+		public async Task<ActionResult<List<ProductDTO>>> GetProductsAsync([FromQuery] ProductParams productParams)
 		{
 			var query = _context.Products
+				.Include(x => x.Category)
 				.Sort(productParams.OrderBy)
 				.Search(productParams.SearchTerm)
-				.Filter(productParams.Brands, productParams.Types)
+				.Filter(productParams.Categories)
 				.AsQueryable();
 
 			var products = await PagedList<Product>.ToPagedList(query, productParams.PageNumber, productParams.PageSize);
 
 			Response.AddPaginationHeader(products.MetaData);
 
-			return products;
+			var productsDTO = _mapper.Map<List<ProductDTO>>(products);
+
+			return productsDTO;
 		}
 
 		[HttpGet("{id}", Name = "GetProduct")]
-		public async Task<ActionResult<Product>> GetProductAsync(int id)
+		public async Task<ActionResult<ProductDTO>> GetProductAsync(int id)
 		{
-			var product = await _context.Products.FindAsync(id);
-
+			var product = await _context.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id);
 			if (product == null) return NotFound();
 
-			return product;
-		}
+			var productDTO = _mapper.Map<ProductDTO>(product);
 
-		[HttpGet("filters")]
-		public async Task<IActionResult> GetFilters()
-		{
-			var brands = await _context.Products.Select(p => p.Brand).Distinct().ToListAsync();
-			var types = await _context.Products.Select(p => p.Type).Distinct().ToListAsync();
-
-			return Ok(new { brands, types });
+			return productDTO;
 		}
 
 		[Authorize(Roles = "Admin")]
@@ -158,6 +154,13 @@ namespace API.Controllers
 			if (result) return Ok();
 
 			return BadRequest(new ProblemDetails { Title = "Problem deleting product" });
+		}
+
+		[HttpGet("filters")]
+		public async Task<IActionResult> GetFilters()
+		{
+			var categories = await _context.Categories.ToListAsync();
+			return Ok(new { categories });
 		}
 	}
 }

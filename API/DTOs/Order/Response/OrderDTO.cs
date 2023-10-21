@@ -13,5 +13,6 @@ namespace API.DTOs.Order.Response
         public decimal DeliveryFee { get; set; }
         public string OrderStatus { get; set; }
         public decimal Total { get; set; }
+        public bool isDelivered { get; set; }
     }
 }
