@@ -1,4 +1,5 @@
-import { Avatar, Button, Fade, Menu, MenuItem } from "@mui/material";
+import { Person } from "@mui/icons-material";
+import { Button, Fade, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -25,7 +26,7 @@ export default function SignedInMenu() {
         sx={{ typography: "body1" }}
         onClick={handleClick}
       >
-        <Avatar>{user?.email.charAt(0).toUpperCase()}</Avatar>
+        <Person />
       </Button>
       <Menu
         anchorEl={anchorEl}

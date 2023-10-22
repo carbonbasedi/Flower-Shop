@@ -28,6 +28,12 @@ namespace API.Data.Contexts
 
 			base.OnModelCreating(modelBuilder);
 
+			modelBuilder.Entity<Product>()
+				.Property(p => p.DiscountedPrice)
+				.HasColumnType("decimal(18,2)");
+
+			base.OnModelCreating(modelBuilder);
+
 			modelBuilder.Entity<User>()
 				.HasOne(a => a.Address)
 				.WithOne()
@@ -38,6 +44,11 @@ namespace API.Data.Contexts
 
 			modelBuilder.Entity<OrderItem>()
 				.Property(p => p.Price)
+				.HasColumnType("decimal(18,2)");
+			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.Entity<OrderItem>()
+				.Property(p => p.DiscountedPrice)
 				.HasColumnType("decimal(18,2)");
 			base.OnModelCreating(modelBuilder);
 

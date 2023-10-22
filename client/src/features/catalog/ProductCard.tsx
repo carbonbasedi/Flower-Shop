@@ -11,25 +11,27 @@ import {
 import { Link } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { currencyFormat } from "../../app/util/util";
 import { addBasketItemAsync } from "../basket/basketSlice";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { Visibility } from "@mui/icons-material";
 
 interface Props {
   product: Product;
+  spacing: number;
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, spacing }: Props) {
   const { status } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
 
   const deco = product.discount > 0 ? "line-through" : "";
 
   return (
-    <>
+    <Box mx={spacing}>
       <Card>
         <CardMedia
           sx={{
-            height: 140,
+            height: 300,
             backgroundSize: "contain",
             bgcolor: "primary.light",
           }}
@@ -48,15 +50,18 @@ export default function ProductCard({ product }: Props) {
               variant="h6"
               sx={{ textDecoration: deco }}
             >
-              {currencyFormat(product.price)}
+              ${product.price.toFixed(2)}
             </Typography>
-            <Typography gutterBottom color="khaki" variant="h5">
-              {product.discount > 0
-                ? currencyFormat(
-                    product.price - (product.price / 100) * product.discount
-                  )
-                : ""}
-            </Typography>
+            {product.discountedPrice > 0 && (
+              <>
+                <Typography gutterBottom color="" variant="h6">
+                  -{product.discount}%
+                </Typography>
+                <Typography gutterBottom color="red" variant="h5">
+                  ${product.discountedPrice.toFixed(2)}
+                </Typography>
+              </>
+            )}
           </Box>
           <Typography variant="body1" sx={{ color: "Green" }}>
             {product.name}
@@ -70,13 +75,13 @@ export default function ProductCard({ product }: Props) {
             loading={status === "pendingAddItem" + product.id}
             size="small"
           >
-            Add to Cart
+            <AddShoppingCartIcon />
           </LoadingButton>
           <Button component={Link} to={`/catalog/${product.id}`} size="small">
-            View
+            <Visibility />
           </Button>
         </CardActions>
       </Card>
-    </>
+    </Box>
   );
 }

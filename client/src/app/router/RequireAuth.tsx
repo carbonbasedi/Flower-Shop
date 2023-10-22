@@ -18,6 +18,6 @@ export default function RequireAuth({ roles }: Props) {
     toast.error("Not authorised to access this area");
     return <Navigate to="/catalog" />;
   }
-
+  
   return <Outlet />;
 }

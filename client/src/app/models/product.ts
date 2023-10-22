@@ -15,6 +15,7 @@ export interface Product {
   category: string;
   isFeatured: boolean;
   discount: number;
+  discountedPrice: number;
 }
 
 export interface ProductParams {

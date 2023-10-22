@@ -162,6 +162,7 @@ const Account = {
   resetPasswordGet: () => requests.get("account/resetPasswordGet"),
   resetPassword: (values: any) =>
     requests.post("account/resetPassword", values),
+  sendEmail: (values: any) => requests.post("account/sendEmail", values),
 };
 
 const Orders = {

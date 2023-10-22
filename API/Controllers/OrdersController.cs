@@ -91,6 +91,7 @@ namespace API.Controllers
                 {
                     ItemOrdered = itemOrdered,
                     Price = productItem.Price,
+                    DiscountedPrice = item.Product.DiscountedPrice,
                     Quantity = item.Quantity
                 };
 
@@ -98,8 +99,8 @@ namespace API.Controllers
                 productItem.QuantityInStock -= item.Quantity;
             }
 
-            var subtotal = items.Sum(item => item.Price * item.Quantity);
-            var deliveryFee = subtotal > 1000 ? 0 : 500;
+            var subtotal = items.Sum(item => (item.DiscountedPrice ?? item.Price) * item.Quantity);
+            var deliveryFee = subtotal > 100 ? 0 : 5;
 
             var order = new Order
             {

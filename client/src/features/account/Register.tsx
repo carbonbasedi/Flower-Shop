@@ -47,6 +47,7 @@ export default function Register() {
         flexDirection: "column",
         alignItems: "center",
         p: 4,
+        mb: 4,
       }}
     >
       <CssBaseline />

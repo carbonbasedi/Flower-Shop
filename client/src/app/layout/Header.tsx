@@ -1,4 +1,4 @@
-import { ShoppingCart } from "@mui/icons-material";
+import { DarkMode, ShoppingCart, WbSunny } from "@mui/icons-material";
 import {
   AppBar,
   Badge,
@@ -7,14 +7,14 @@ import {
   List,
   ListItem,
   Switch,
-  Toolbar,
-  Typography,
+  Toolbar
 } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
 import { useAppSelector } from "../store/configureStore";
 import SignedInMenu from "./SignedInMenu";
 
 const midLinks = [
+  { title: "home", path: "/" },
   { title: "catalog", path: "/catalog" },
   { title: "about", path: "/about" },
   { title: "contact", path: "/contact" },
@@ -56,15 +56,9 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
         }}
       >
         <Box display="flex" alignItems="center">
-          <Typography
-            variant="h6"
-            component={NavLink}
-            to="/"
-            sx={{ color: "inherit", textDecoration: "none" }}
-          >
-            Store
-          </Typography>
+          <WbSunny />
           <Switch checked={darkMode} onChange={handleThemeChange} />
+          <DarkMode />
         </Box>
 
         <List sx={{ display: "flex" }}>

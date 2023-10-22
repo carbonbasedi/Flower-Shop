@@ -1,6 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Iframe from "react-iframe";
 import useContactInfo from "../../app/hooks/useContactInfo";
+import MailUs from "./MailUs";
 
 export default function ContactPage() {
   const { contactInfo } = useContactInfo();
@@ -52,7 +53,7 @@ export default function ContactPage() {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid container spacing={5} >
+            <Grid container spacing={5}>
               <Grid item xs={3}>
                 <Iframe
                   url={info.mapLocation}
@@ -68,6 +69,7 @@ export default function ContactPage() {
           </Box>
         );
       })}
+      <MailUs />
     </>
   );
 }

@@ -12,5 +12,6 @@ namespace API.DTOs.Product.Response
         public string Category { get; set; }
         public bool isFeatured { get; set; }
         public int Discount { get; set; }
+        public decimal DiscountedPrice { get; set; }
     }
 }

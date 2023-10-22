@@ -17,7 +17,7 @@ export default function ProductList({ prods }: Props) {
           {!productsLoaded ? (
             <ProductCardSkeleton />
           ) : (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} spacing={0} />
           )}
         </Grid>
       ))}

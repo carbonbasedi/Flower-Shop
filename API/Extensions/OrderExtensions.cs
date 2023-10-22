@@ -26,6 +26,7 @@ namespace API.Extensions
                         Name = item.ItemOrdered.Name,
                         PictureUrl = item.ItemOrdered.PictureUrl,
                         Price = item.Price,
+                        DiscountedPrice = item.DiscountedPrice,
                         Quantity = item.Quantity
                     }).ToList()
                 }).AsNoTracking();

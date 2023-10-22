@@ -29,6 +29,7 @@ export default function BasketTable({ items, isBasket = true }: Props) {
           <TableRow>
             <TableCell>Product</TableCell>
             <TableCell align="right">Price</TableCell>
+            <TableCell align="right">Price after discount</TableCell>
             <TableCell align="center">Quantity</TableCell>
             <TableCell align="right">Subtotal</TableCell>
             {isBasket && <TableCell align="right"></TableCell>}
@@ -50,8 +51,11 @@ export default function BasketTable({ items, isBasket = true }: Props) {
                   <span>{item.name}</span>
                 </Box>
               </TableCell>
+              <TableCell align="right">${item.price.toFixed(2)}</TableCell>
               <TableCell align="right">
-                ${(item.price / 100).toFixed(2)}
+                {item.discountedPrice > 0
+                  ? item.discountedPrice.toFixed(2)
+                  : ""}
               </TableCell>
               <TableCell align="center">
                 {isBasket && (
@@ -89,7 +93,11 @@ export default function BasketTable({ items, isBasket = true }: Props) {
                 )}
               </TableCell>
               <TableCell align="right">
-                ${((item.price * item.quantity) / 100).toFixed(2)}
+                $
+                {(console.log(item.quantity),
+                item.discountedPrice > 0
+                  ? item.discountedPrice * item.quantity
+                  : item.price * item.quantity).toFixed(2)}
               </TableCell>
               {isBasket && (
                 <TableCell align="right">

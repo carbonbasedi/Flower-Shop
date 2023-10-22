@@ -13,10 +13,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import agent from "../../../app/api/agent";
 import { Order } from "../../../app/models/order";
-import { currencyFormat } from "../../../app/util/util";
 import OrderDetailed from "../../orders/OrderDetailed";
 
 export default function OrdersList() {
@@ -29,15 +28,21 @@ export default function OrdersList() {
     setOpen(false);
   };
 
-  useEffect(() => {
+  const fetchOrders = useCallback(() => {
     agent.Admin.paidOrders()
       .then((orders) => setOrders(orders))
       .catch((error) => console.log(error));
   }, []);
 
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
   function handleMarkOrder(id: number) {
     agent.Admin.orderDelivered(id)
-      .then((orders) => setOrders(orders))
+      .then(() => {
+        fetchOrders();
+      })
       .catch((error) => console.log(error));
     setTarget(0);
   }
@@ -111,7 +116,7 @@ export default function OrdersList() {
                 {order.id}
               </TableCell>
               <TableCell>{order.userId}</TableCell>
-              <TableCell align="right">{currencyFormat(order.total)}</TableCell>
+              <TableCell align="right">$ {order.total}</TableCell>
               <TableCell align="right">
                 {order.orderDate.split("T")[0]}
               </TableCell>

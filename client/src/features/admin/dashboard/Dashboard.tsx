@@ -15,7 +15,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import OrdersList from "./OrderList";
 import { mainListItems } from "./listItems";
 
@@ -70,6 +70,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function Dashboard() {
+  const location = useLocation();
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -145,14 +146,17 @@ export default function Dashboard() {
       >
         <Toolbar />
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Grid container spacing={3}>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                <OrdersList />
-              </Paper>
+          {location.pathname === "/dashboard" ? (
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+                  <OrdersList />
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
+          ) : (
+            <Outlet />
+          )}
         </Container>
       </Box>
     </Box>

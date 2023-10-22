@@ -49,34 +49,36 @@ export const router = createBrowserRouter([
           {
             path: "dashboard",
             element: <Dashboard />,
-          },
-          {
-            path: "dashboard/inventory",
-            element: <Inventory />,
-          },
-          {
-            path: "dashboard/sliderList",
-            element: <SliderList />,
-          },
-          {
-            path: "dashboard/aboutUsList",
-            element: <AboutUsList />,
-          },
-          {
-            path: "dashboard/dutyList",
-            element: <DutyList />,
-          },
-          {
-            path: "dashboard/workerList",
-            element: <WorkerList />,
-          },
-          {
-            path: "dashboard/categoryList",
-            element: <CategoryList />,
-          },
-          {
-            path: "dashboard/contactInfo",
-            element: <ContactInfoList />,
+            children: [
+              {
+                path: "inventory",
+                element: <Inventory />,
+              },
+              {
+                path: "sliderList",
+                element: <SliderList />,
+              },
+              {
+                path: "aboutUsList",
+                element: <AboutUsList />,
+              },
+              {
+                path: "dutyList",
+                element: <DutyList />,
+              },
+              {
+                path: "workerList",
+                element: <WorkerList />,
+              },
+              {
+                path: "categoryList",
+                element: <CategoryList />,
+              },
+              {
+                path: "contactInfo",
+                element: <ContactInfoList />,
+              },
+            ],
           },
         ],
       },

@@ -267,6 +267,9 @@ namespace API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal?>("DiscountedPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int?>("OrderId")
                         .HasColumnType("int");
 
@@ -302,6 +305,9 @@ namespace API.Data.Migrations
 
                     b.Property<int>("Discount")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("DiscountedPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");

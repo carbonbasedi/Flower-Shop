@@ -11,7 +11,6 @@ import {
   Box,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import { currencyFormat } from "../../../app/util/util";
 import useProducts from "../../../app/hooks/useProducts";
 import AppPagination from "../../../app/components/AppPagination";
 import { useAppDispatch } from "../../../app/store/configureStore";
@@ -56,7 +55,7 @@ export default function Inventory() {
 
   return (
     <>
-      <Box display="flex" justifyContent="space-between" >
+      <Box display="flex" justifyContent="space-between">
         <Typography sx={{ p: 2 }} variant="h4">
           Inventory
         </Typography>
@@ -100,9 +99,7 @@ export default function Inventory() {
                     <span>{product.name}</span>
                   </Box>
                 </TableCell>
-                <TableCell align="center">
-                  {currencyFormat(product.price)}
-                </TableCell>
+                <TableCell align="center">{product.price}</TableCell>
                 <TableCell align="center">{product.category}</TableCell>
                 <TableCell align="center">{product.quantityInStock}</TableCell>
                 <TableCell align="right">

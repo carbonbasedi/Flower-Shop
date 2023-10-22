@@ -10,6 +10,8 @@ export interface BasketItem {
   productId: number;
   name: string;
   price: number;
+  discount: number;
+  discountedPrice: number;
   pictureUrl: string;
   brand: string;
   type: string;

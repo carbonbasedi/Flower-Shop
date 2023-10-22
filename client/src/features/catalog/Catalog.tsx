@@ -8,6 +8,7 @@ import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import CheckboxButtons from "../../app/components/CheckboxButtons";
 import AppPagination from "../../app/components/AppPagination";
 import useProducts from "../../app/hooks/useProducts";
+import { useEffect } from "react";
 
 const sortOptions = [
   { value: "name", label: "Alphabetical" },
@@ -20,6 +21,11 @@ export default function Catalog() {
   const { prods, categories, filtersLoaded, metaData } = useProducts();
   const dispatch = useAppDispatch();
   const { productParams } = useAppSelector((state) => state.catalog);
+
+  useEffect(() => {
+    const mode = "";
+    dispatch(setProductParams({ orderBy: mode }));
+  }, [dispatch]);
 
   if (!filtersLoaded) return <Loading message="Loading products..." />;
 
@@ -52,7 +58,7 @@ export default function Catalog() {
         <ProductList prods={prods} />
       </Grid>
       <Grid item xs={3} />
-      <Grid item xs={9} sx={{ mb: 2, mt:2 }}>
+      <Grid item xs={9} sx={{ mb: 2, mt: 2 }}>
         {metaData && (
           <AppPagination
             metaData={metaData}

@@ -29,6 +29,7 @@ export const mainListItems = (
     {dashboardItems.map((item, index) => {
       return (
         <Box
+          key={index}
           component={Link}
           to={item.path}
           sx={{ textDecoration: "none", color: "inherit" }}

@@ -5,6 +5,7 @@ using API.DTOs.Auth.Request;
 using API.DTOs.Auth.Response;
 using API.Entities;
 using API.Extensions;
+using API.RequestHelpers.Validators.Auth;
 using API.Services;
 using API.Services.EmailService;
 using API.Services.EmailService.Abstract;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 
 namespace API.Controllers
 {
@@ -183,7 +185,7 @@ namespace API.Controllers
                 Token = token
             };
 
-            return Ok(dto);
+            return Redirect("http://localhost:3000/resetPassword");
         }
 
         [HttpPost("resetPassword")]
@@ -203,6 +205,25 @@ namespace API.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpPost("sendEmail")]
+        public async Task<IActionResult> SendEmail(SendEmailDTO sendEmailDTO)
+        {
+            var vResult = await new SendEmailDTOValidator().ValidateAsync(sendEmailDTO);
+            if (!vResult.IsValid)
+            {
+                foreach (var error in vResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.ErrorMessage);
+                }
+                return ValidationProblem();
+            }
+
+            var message = new Message(new string[] { "ruslan.mirzezade.21@gmail.com" }, $"Message from {sendEmailDTO.Email} {sendEmailDTO.Name} ", sendEmailDTO.Message);
+            _emailSender.SendEmail(message);
+
+            return Ok("Message sent");
         }
 
         private async Task<Basket> RetrieveBasket(string userId)

@@ -1,13 +1,11 @@
-import { Box } from "@mui/material";
 import HomePageSlider from "./HomePageSlider";
+import ProductSlider from "./ProductSlider";
 
 export default function HomePage() {
   return (
     <>
       <HomePageSlider />
-      <Box display="flex" justifyContent="center" sx={{ p: 4 }}>
-        Welcome to the Shop!
-      </Box>
+      <ProductSlider />
     </>
   );
 }

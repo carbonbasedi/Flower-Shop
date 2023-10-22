@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import agent from "../../app/api/agent";
 import Loading from "../../app/layout/Loading";
 import { Order } from "../../app/models/order";
-import { currencyFormat } from "../../app/util/util";
 import OrderDetailed from "./OrderDetailed";
 
 export default function Orders() {
@@ -58,7 +57,7 @@ export default function Orders() {
               <TableCell component="th" scope="row">
                 {order.id}
               </TableCell>
-              <TableCell align="right">{currencyFormat(order.total)}</TableCell>
+              <TableCell align="right">$ {order.total}</TableCell>
               <TableCell align="right">
                 {order.orderDate.split("T")[0]}
               </TableCell>

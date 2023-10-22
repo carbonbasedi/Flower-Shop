@@ -14,23 +14,21 @@ namespace API.Entities
 		public Category Category { get; set; }
 		public bool isFeatured { get; set; }
 		public int Discount { get; set; }
-		// public decimal? DiscountedPrice { get; set; }
-
-		// public Product()
-		// {
-		// 	CalculateDiscountedPrice();
-		// }
-
-		// public void CalculateDiscountedPrice()
-		// {
-		// 	if (Discount > 0)
-		// 	{
-		// 		DiscountedPrice = Price - (Price * (decimal)Discount / 100);
-		// 	}
-		// 	else
-		// 	{
-		// 		DiscountedPrice = null;
-		// 	}
-		// }
+		private decimal? _discountedPrice;
+		public decimal? DiscountedPrice
+		{
+			get
+			{
+				if (Discount > 0)
+				{
+					return Price - (Price * (decimal)Discount / 100);
+				}
+				return null;
+			}
+			set
+			{
+				_discountedPrice = value;
+			}
+		}
 	}
 }
