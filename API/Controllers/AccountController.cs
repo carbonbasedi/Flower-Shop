@@ -184,8 +184,7 @@ namespace API.Controllers
                 Email = email,
                 Token = token
             };
-
-            return Redirect("http://localhost:3000/resetPassword");
+            return dto;
         }
 
         [HttpPost("resetPassword")]
